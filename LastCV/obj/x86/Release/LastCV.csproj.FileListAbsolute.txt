@@ -1,0 +1,11 @@
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\LastCV.exe
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\LastCV.pdb
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\OpenCvSharp.CPlusPlus.dll
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\OpenCvSharp.dll
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\OpenCvSharp.MachineLearning.dll
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.Form1.resources
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.Properties.Resources.resources
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.csproj.GenerateResource.Cache
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.exe
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.pdb
+C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\test.png
