@@ -23,7 +23,6 @@ namespace LastCV
             DirectionText[3] = "Left";
             DirectionText[4] = "Top";
             DirectionText[5] = "Bottom";
-
             DirectionText[6] = "Right";
     
             InitializeComponent();
@@ -39,10 +38,7 @@ namespace LastCV
         private string[] DirectionText;
         private void CaptureCamera()
         {
-            thre1 = threshold1.Value;
-            thre2 = threshold2.Value;
-            cannyThre1 = cannyBar1.Value;
-            cannyThre2 = cannyBar2.Value;
+           
             _cameraThread = new Thread(new ThreadStart(CaptureCameraCallback));
 
             _cameraThread.Start();
@@ -69,18 +65,19 @@ namespace LastCV
                         for (int j = 0; j < 3; j++)
                             Status[i, j] = 0;
 
-                    //IplImage converted = cap.QueryFrame();
-                    
-                    IplImage mainImage = cap.QueryFrame();
-                   //cap.SetCaptureProperty(CaptureProperty.FrameHeight,1200);
-                   //cap.SetCaptureProperty(CaptureProperty.FrameWidth,1600);
 
-                    //IplImage mainImage = new IplImage("test.png");
-                    IplImage gray = new IplImage(mainImage.Size, BitDepth.U8, 1);
-         
-                    int WIDTH = (cap.QueryFrame().Width);
                   
-                    int HEIGHT = (cap.QueryFrame().Height);
+                   IplImage mainImage = cap.QueryFrame();
+                 
+
+                   // IplImage mainImage = new IplImage("test.png");
+                    IplImage gray = new IplImage(mainImage.Size, BitDepth.U8, 1);
+                    IplImage display = mainImage;
+
+
+                    int WIDTH = (mainImage.Width);
+
+                    int HEIGHT = (mainImage.Height);
           
  
                     
@@ -200,8 +197,7 @@ namespace LastCV
 
                                         }
                                         
-                                        // CvPoint point = new CvPoint((2*WIDTH / 3),(int)( slope * (WIDTH / 1.5) + c));
-                                        //mainImage.Line(point, point, CvColor.Yellow, 5);
+                                     
                                     
                                    
                                   
@@ -248,19 +244,58 @@ namespace LastCV
                         }
                         else if (sum == 9)
                         {
-                            if (leftD == 3)
+                            if (Status[1, 1] == 0)
                             {
-                                
-                                setMargin(WIDTH / (minL + 20), MARGINH);
+                                if (leftD == 3)
+                                {
+
+                                    setMargin(WIDTH / (minL + 20), MARGINH);
+                                }
+                                if (topD == 4)
+                                {
+
+                                    setMargin(MARGINW, HEIGHT / (minT + 20));
+                                }
+                                DIRECTION = 1;
                             }
-                            if(topD==4)
-                            setMargin(MARGINW,HEIGHT / (minT+20));
-                            DIRECTION = 1;
+                            else
+                            {
+                                 DIRECTION = 3 +(int)((leftD > 0)?0:1);
+                                
+                                for (int i = 0; i < 3; i += 2)
+                                     for (int j = 0; j < 3; j += 2)
+                                         if (Status[i, j] > 0)
+                                             if(leftD>0)
+                                                DIRECTION = 5 - (int)(j * 0.5);
+                                             else if(topD>0)
+                                                DIRECTION = 6 - (int)(i * 1.5);
+                           
+
+                            }
+                          
                         }
                         else if (sum > 6)
                         {
-                            if (sum > 9) DIRECTION = 6;
-                            else DIRECTION = 3;
+                            if (sum > 9)
+                            {
+                                if (Status[1, 1] == 0)
+                                    DIRECTION = 6;
+                                else
+                                {
+                                    DIRECTION = 3;
+                                }
+
+                            }
+                            else
+                            {
+                                if (Status[1, 1] == 0)
+                                    DIRECTION = 3;
+                                else
+                                {
+                                    DIRECTION = 6;
+                                }
+
+                            }
                         }
                         else if (sum > 0)
                         {
@@ -269,22 +304,20 @@ namespace LastCV
                         else if (Status[1, 1] > 0)
                             DIRECTION = 2;
                         mainImage.PutText(getDirection(DIRECTION), new CvPoint(1 * WIDTH / 3 + (WIDTH / 6), 1 * HEIGHT / 3 + HEIGHT / 6), new CvFont(FontFace.HersheyTriplex,1,1), CvColor.Navy);
-                        //Thread.Sleep(500);
+                        
                     }
                     catch (OpenCvSharp.OpenCvSharpException e)
                     {
 
                     }
                     catch (OpenCVException e) { }
-                    
-                    Bitmap bm = BitmapConverter.ToBitmap(mainImage);
 
-                    bm.SetResolution(300,300);
+                    Bitmap bm = BitmapConverter.ToBitmap(display);
+
+                  //  bm.SetResolution(300,300);
                      pictureBox.Image = bm;
 #if DEBUG
-                    Bitmap bm2 = BitmapConverter.ToBitmap(gray);
-                    bm2.SetResolution(pictureBoxDebug.Width, pictureBoxDebug.Height);
-                    pictureBoxDebug.Image = bm2;
+             
 #endif 
                 }
 
@@ -321,25 +354,6 @@ namespace LastCV
 
         }
 
-        private void cannyBar1_Scroll(object sender, EventArgs e)
-        {
-            cannyThre1 = cannyBar1.Value;
-        }
-
-        private void cannyBar2_Scroll(object sender, EventArgs e)
-        {
-            cannyThre2 = cannyBar2.Value;
-        }
-
-        private void threshold1_Scroll(object sender, EventArgs e)
-        {
-            thre1 = threshold1.Value;
-        }
-
-        private void threshold2_Scroll(object sender, EventArgs e)
-        {
-            thre2 = threshold1.Value;
-        }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
