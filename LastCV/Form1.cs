@@ -16,6 +16,16 @@ namespace LastCV
     {
         public Form1()
         {
+            DirectionText = new string[10];
+            DirectionText[0] = "Nice";
+            DirectionText[1] = "Up";
+            DirectionText[2] = "Down";
+            DirectionText[3] = "Left";
+            DirectionText[4] = "Top";
+            DirectionText[5] = "Bottom";
+
+            DirectionText[6] = "Right";
+    
             InitializeComponent();
             CaptureCamera();
             
@@ -62,7 +72,9 @@ namespace LastCV
                     //IplImage converted = cap.QueryFrame();
                     
                     IplImage mainImage = cap.QueryFrame();
-                   //cap.SetCaptureProperty(CaptureType
+                   //cap.SetCaptureProperty(CaptureProperty.FrameHeight,1200);
+                   //cap.SetCaptureProperty(CaptureProperty.FrameWidth,1600);
+
                     //IplImage mainImage = new IplImage("test.png");
                     IplImage gray = new IplImage(mainImage.Size, BitDepth.U8, 1);
          
@@ -264,11 +276,8 @@ namespace LastCV
                     
                     Bitmap bm = BitmapConverter.ToBitmap(mainImage);
 
-                    pictureBox.Width = mainImage.Width;
-                    pictureBox.Height = mainImage.Height;
-
-                    bm.SetResolution(pictureBox.Width, pictureBox.Height);
-                    pictureBox.Image = bm;
+                    bm.SetResolution(300,300);
+                     pictureBox.Image = bm;
 #if DEBUG
                     Bitmap bm2 = BitmapConverter.ToBitmap(gray);
                     bm2.SetResolution(pictureBoxDebug.Width, pictureBoxDebug.Height);

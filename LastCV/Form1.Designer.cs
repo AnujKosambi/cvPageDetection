@@ -55,6 +55,7 @@ namespace LastCV
             // pictureBox
             // 
             this.pictureBox.Location = new System.Drawing.Point(12, 58);
+            this.pictureBox.MaximumSize = new System.Drawing.Size(1666, 2222);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(640, 480);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -125,15 +126,6 @@ namespace LastCV
             ((System.ComponentModel.ISupportInitialize)(this.cannyBar2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-            DirectionText = new string[10];
-            DirectionText[1] = "Up";
-            DirectionText[2] = "Down";
-            DirectionText[3] = "Left";
-            DirectionText[4] = "Top";
-            DirectionText[6] = "Right";
-            DirectionText[5] = "Bottom";
-            DirectionText[0] = "Nice";
-
 
         }
 
