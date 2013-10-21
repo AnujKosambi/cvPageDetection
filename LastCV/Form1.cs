@@ -11,16 +11,20 @@ using System.Windows.Forms;
 
 namespace LastCV
 {
+    
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
             CaptureCamera();
+            
         }
+        
         private Thread _cameraThread;
         public static int thre1,thre2;
         public static int cannyThre1, cannyThre2;
+        public static  double MARGINW = 5, MARGINH = 5;
         private static int[,] Status=new int[3,3];
         private string[] DirectionText;
         private void CaptureCamera()
@@ -34,43 +38,56 @@ namespace LastCV
             _cameraThread.Start();
         }
 
+        private void setMargin(double i, double j)
+        {
+            MARGINW = i;
+            MARGINH = j;
+        }
+
         private void CaptureCameraCallback()
         {
             using (CvCapture cap = CvCapture.FromCamera(CaptureDevice.Any, -1))
             {
                 while (CvWindow.WaitKey(10) < 0)
                 {
-                    int MARGINW, MARGINH,MARGIN=10;
+                
+                 
                     int[] HORI = new int[2];
                     int[] VERTI = new int[2];
 
                     for (int i = 0; i < 3; i++)
                         for (int j = 0; j < 3; j++)
                             Status[i, j] = 0;
-                   // IplImage converted = new IplImage(cap.QueryFrame().Size, BitDepth.U8, 1);
+
+                    //IplImage converted = cap.QueryFrame();
+                    
                     IplImage mainImage = cap.QueryFrame();
+                   //cap.SetCaptureProperty(CaptureType
                     //IplImage mainImage = new IplImage("test.png");
                     IplImage gray = new IplImage(mainImage.Size, BitDepth.U8, 1);
+         
                     int WIDTH = (cap.QueryFrame().Width);
-                    int HEIGHT = (cap.QueryFrame().Height);
-                    MARGINW = WIDTH / MARGIN;
-                    MARGINH = HEIGHT / MARGIN;
-                    HORI[0] = MARGINW;
-                    HORI[1] = (MARGIN-1) * HORI[0];
-                    VERTI[0] = MARGINH;
-                    VERTI[1] = (MARGIN-1) * VERTI[0];
                   
+                    int HEIGHT = (cap.QueryFrame().Height);
+          
+ 
+                    
+                    HORI[0] =(int) (WIDTH/MARGINW);
+                    HORI[1] = (int)((MARGINW - 1) * HORI[0]);
+                    VERTI[0] = (int)(HEIGHT / MARGINH);
+                    VERTI[1] = (int)((MARGINH - 1) * VERTI[0]);
+                    
                     try
                     {  
                         #region BLOCK_DETECTION
 
-                        mainImage.Smooth(mainImage, SmoothType.Blur, 5, 5);
+                        mainImage.Smooth(mainImage, SmoothType.Blur, 15, 15);
                         mainImage.CvtColor(gray, ColorConversion.BgrToGray);
                        
                         
                         System.Diagnostics.Debug.WriteLine("" + cannyThre1);
                         Cv.Canny(gray, gray, 35, 35, ApertureSize.Size3);
-                        gray.Smooth(gray, SmoothType.BlurNoScale, 3,3);
+                        gray.Smooth(gray, SmoothType.Blur, 3,3);
                         CvSeq<CvPoint> contours;
                         CvMemStorage _storage = new CvMemStorage();
                         Cv.FindContours(gray, _storage, out contours, CvContour.SizeOf, ContourRetrieval.Tree, ContourChain.ApproxSimple);
@@ -82,15 +99,35 @@ namespace LastCV
 #if DEBUG
                         setupDebug(mainImage,HORI,VERTI);
 #endif
+                        int minL=0;
+                        int minT=0;
+                        
                         // gray.HoughLines2(storage, HoughLinesMethod.Standard, Cv.PI / 180, 0, 0);
-                        CvSeq lines = gray.HoughLines2(storage, HoughLinesMethod.Probabilistic, 1, Math.PI / 180, 50,100,1);
+                        CvSeq lines = gray.HoughLines2(storage, HoughLinesMethod.Probabilistic, 1, Math.PI / 180, 50,50,1);
                         for (int i = 0; i < lines.Total; i++)
                         {
+                          
+
                             CvLineSegmentPoint elem = lines.GetSeqElem<CvLineSegmentPoint>(i).Value;
                             mainImage.Line(elem.P1, elem.P2, CvColor.Navy, 2);
+
+                            if (elem.P1.X < WIDTH / 2)
+                            { minL = Math.Max(elem.P1.X, minL); }
+                            if (elem.P2.X < WIDTH / 2)
+                            { minL = Math.Max(elem.P2.X, minL); }
+
+                            if (elem.P1.Y < HEIGHT / 2)
+                            { minT = Math.Max(elem.P1.Y, minT); }
+                            if (elem.P2.Y < HEIGHT / 2)
+                            { minT = Math.Max(elem.P2.Y, minT); }
+
+                            
+
+                   
+
                             try
                             {
-                                if (elem.P1.Y <= HEIGHT -10 && elem.P2.Y <= HEIGHT -10)
+                                if (elem.P1.Y <= HEIGHT-10  && elem.P2.Y <= HEIGHT-10)
                                 {
                                     int i1 = (elem.P1.X < HORI[0]) ? 0 : (elem.P1.X / HORI[1])+1;
                                     int j1 = (elem.P1.Y < VERTI[0]) ? 0 : (elem.P1.Y / VERTI[1])+1;
@@ -98,20 +135,31 @@ namespace LastCV
                                     int i2 = (elem.P2.X < HORI[0]) ? 0 : (elem.P2.X / HORI[1])+1;
                                     int j2 = (elem.P2.Y < VERTI[0]) ? 0 : (elem.P2.Y / VERTI[1])+1;
                                     Status[i2, j2]++;
+                                    double slope=0,c=0;
+                                    List<CvPoint> points = new List<CvPoint>(Math.Abs(i1 - i2) + Math.Abs(j1 - j2) + 2);
                                     if (elem.P1.X != elem.P2.X)
                                     {
-                                        double slope = 1.0d*(elem.P2.Y - elem.P1.Y) / (elem.P2.X - elem.P1.X);
-                                        double c = elem.P1.Y - slope * elem.P1.X;
-                                        List<CvPoint> points = new List<CvPoint>(Math.Abs(i1 - i2) + Math.Abs(j1 - j2)+2);
-                                       
-
-                                        for (int p = Math.Min(i1, i2); p !=Math.Max(i1,i2); p++)
-                                            points.Add(new CvPoint(HORI[p], (int)(slope * HORI[p]+ c)));
+                                        slope = 1.0d * (elem.P2.Y - elem.P1.Y) / (elem.P2.X - elem.P1.X);
+                                        c = elem.P1.Y - slope * elem.P1.X;
+                                        for (int p = Math.Min(i1, i2); p != Math.Max(i1, i2); p++)
+                                            points.Add(new CvPoint(HORI[p], (int)(slope * HORI[p] + c)));
                                         for (int p = Math.Min(j1, j2); p != Math.Max(j1, j2); p++)
-                                            points.Add(new CvPoint((int) ((VERTI[p] - c)/slope),VERTI[p] ));
+                                            points.Add(new CvPoint((int)((VERTI[p] - c) / slope), VERTI[p]));
+                                    }
+                                    else
+                                    {
 
+                                        for (int p = Math.Min(j1, j2); p != Math.Max(j1, j2); p++)
+                                        {
+                                            points.Add(new CvPoint(elem.P1.X, VERTI[p]));
+                                         
+                                        }
+                                    }
+#if DEBUG
                                         foreach (var point in points)
-                                            mainImage.Line(point, point, CvColor.Yellow, 3);
+                                            mainImage.Line(point, point, CvColor.Yellow, 10);
+#endif
+
 
                                         points.Add(elem.P1);
                                         points.Add(elem.P2);
@@ -131,12 +179,19 @@ namespace LastCV
                                             int x = (mid.X < HORI[0]) ? 0 : (mid.X/ HORI[1]) + 1;
                                             int y = (mid.Y < VERTI[0]) ? 0 : (mid.Y / VERTI[1]) + 1;
                                             Status[x,y]++;
+#if DEBUG
+                                            mainImage.Line(mid, mid, CvColor.Green, 10);
+#endif
+
+
+
+
                                         }
                                         
                                         // CvPoint point = new CvPoint((2*WIDTH / 3),(int)( slope * (WIDTH / 1.5) + c));
                                         //mainImage.Line(point, point, CvColor.Yellow, 5);
                                     
-                                    }
+                                   
                                   
                                 }
                             }
@@ -147,7 +202,7 @@ namespace LastCV
                         }
                     #endregion
 
-#if DEBUG
+
                         int[] _HORI=new int[4];
                         int[] _VERTI = new int[4];
 
@@ -158,15 +213,14 @@ namespace LastCV
                         _HORI[3] = mainImage.Width;
                         _VERTI[3] = mainImage.Height;
 
-                        for(int i=0; i<3;i++)
-                            for(int j=0;j<3;j++)
+                        for (int i = 0; i < 3; i++)
+                            for (int j = 0; j < 3; j++)
                             {
                                 if (Status[i, j] > 0)
-                                    Cv.Rectangle(mainImage, new CvPoint(_HORI[i], _VERTI[j]), new CvPoint(_HORI[i+1], _VERTI[j+1]), new CvScalar(255, 255, 0, 0), 10);
-                                
+                                    Cv.Rectangle(mainImage, new CvPoint(_HORI[i], _VERTI[j]), new CvPoint(_HORI[i + 1], _VERTI[j + 1]), new CvScalar(255, 255, 0, 0), 10);
+
 
                             }
-#endif 
 
                         int leftD = 0, topD = 0, bottomD = 0, rightD = 0;
                         if (Status[0, 1] > 0) leftD = 3; if (Status[1, 0] > 0) topD = 4; if (Status[1, 2] > 1) bottomD = 5; if (Status[2, 1] > 0) rightD = 6;
@@ -182,6 +236,10 @@ namespace LastCV
                         }
                         else if (sum == 9)
                         {
+                            if(leftD==3)
+                            setMargin(WIDTH/(minL+20), MARGINH);
+                            if(topD==4)
+                            setMargin(MARGINW,HEIGHT / (minT+20));
                             DIRECTION = 1;
                         }
                         else if (sum > 6)
@@ -196,15 +254,16 @@ namespace LastCV
                         else if (Status[1, 1] > 0)
                             DIRECTION = 2;
                         mainImage.PutText(getDirection(DIRECTION), new CvPoint(1 * WIDTH / 3 + (WIDTH / 6), 1 * HEIGHT / 3 + HEIGHT / 6), new CvFont(FontFace.HersheyTriplex,1,1), CvColor.Navy);
-                        Thread.Sleep(500);
+                        //Thread.Sleep(500);
                     }
                     catch (OpenCvSharp.OpenCvSharpException e)
                     {
 
                     }
                     catch (OpenCVException e) { }
-
+                    
                     Bitmap bm = BitmapConverter.ToBitmap(mainImage);
+
                     pictureBox.Width = mainImage.Width;
                     pictureBox.Height = mainImage.Height;
 
