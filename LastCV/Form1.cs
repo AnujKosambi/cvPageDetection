@@ -123,14 +123,14 @@ namespace LastCV
                             CvLineSegmentPoint elem = lines.GetSeqElem<CvLineSegmentPoint>(i).Value;
                             mainImage.Line(elem.P1, elem.P2, CvColor.Navy, 2);
 
-                            if (elem.P1.X < WIDTH / 2)
+                            if (elem.P1.X < HORI[0])
                             { minL = Math.Max(elem.P1.X, minL); }
-                            if (elem.P2.X < WIDTH / 2)
+                            if (elem.P2.X < HORI[0])
                             { minL = Math.Max(elem.P2.X, minL); }
 
-                            if (elem.P1.Y < HEIGHT / 2)
+                            if (elem.P1.Y < VERTI[0])
                             { minT = Math.Max(elem.P1.Y, minT); }
-                            if (elem.P2.Y < HEIGHT / 2)
+                            if (elem.P2.Y < VERTI[0])
                             { minT = Math.Max(elem.P2.Y, minT); }
 
                             
@@ -248,8 +248,11 @@ namespace LastCV
                         }
                         else if (sum == 9)
                         {
-                            if(leftD==3)
-                            setMargin(WIDTH/(minL+20), MARGINH);
+                            if (leftD == 3)
+                            {
+                                
+                                setMargin(WIDTH / (minL + 20), MARGINH);
+                            }
                             if(topD==4)
                             setMargin(MARGINW,HEIGHT / (minT+20));
                             DIRECTION = 1;
