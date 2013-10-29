@@ -1,0 +1,12 @@
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\LastCV.exe.config
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\LastCV.exe
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\LastCV.pdb
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\OpenCvSharp.CPlusPlus.dll
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\OpenCvSharp.dll
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\bin\Debug\OpenCvSharp.MachineLearning.dll
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.csprojResolveAssemblyReference.cache
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.Form1.resources
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.Properties.Resources.resources
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.csproj.GenerateResource.Cache
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.exe
+c:\users\anuj\documents\visual studio 2012\Projects\LastCV\LastCV\obj\Debug\LastCV.pdb

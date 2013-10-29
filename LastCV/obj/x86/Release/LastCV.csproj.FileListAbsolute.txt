@@ -9,3 +9,7 @@ C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Releas
 C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.exe
 C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\obj\x86\Release\LastCV.pdb
 C:\Users\anuj\documents\visual studio 2010\Projects\LastCV\LastCV\bin\Release\test.png
+C:\Users\anuj\Documents\Visual Studio 2010\Projects\LastCV\LastCV\bin\Release\DirectShowLib-2005.dll
+C:\Users\anuj\Documents\Visual Studio 2010\Projects\LastCV\LastCV\bin\Release\DirectX.Capture.dll
+C:\Users\anuj\Documents\Visual Studio 2010\Projects\LastCV\LastCV\bin\Release\DShowNET.dll
+C:\Users\anuj\Documents\Visual Studio 2010\Projects\LastCV\LastCV\bin\Release\DirectX.Capture.xml

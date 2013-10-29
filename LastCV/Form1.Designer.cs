@@ -57,7 +57,7 @@ namespace LastCV
             // 
             // pictureBoxDebug
             // 
-            this.pictureBoxDebug.Location = new System.Drawing.Point(658, 12);
+            this.pictureBoxDebug.Location = new System.Drawing.Point(98, 141);
             this.pictureBoxDebug.Name = "pictureBoxDebug";
             this.pictureBoxDebug.Size = new System.Drawing.Size(640, 480);
             this.pictureBoxDebug.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -72,6 +72,7 @@ namespace LastCV
             this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.pictureBoxDebug);
             this.Controls.Add(this.pictureBox);
+            this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "CV";
